@@ -26,15 +26,15 @@ sys.path.insert(0, path0)
 __location__ = os.path.join(os.getcwd(), os.path.dirname(
     inspect.getfile(inspect.currentframe())))
 
-import nvector
-_VERSION = nvector.__version__
-_PACKAGE_PATH = dirname(nvector.__file__)
+import pymef
+_VERSION = pymef.__version__
+_PACKAGE_PATH = dirname(pymef.__file__)
 if 'dev' in _VERSION:
-    _PKG_URL = "http://github.com/pbrod/nvector/blob/master/nvector/{1!s}{2!s}"
+    _PKG_URL = "http://github.com/pbrod/pymef/blob/master/pymef/{1!s}{2!s}"
 else:
-    _PKG_URL = "http://github.com/pbrod/nvector/blob/v{0!s}/nvector/{1!s}{2!s}"
+    _PKG_URL = "http://github.com/pbrod/pymef/blob/v{0!s}/pymef/{1!s}{2!s}"
 
-# package = "nvector"
+# package = "pymef"
 # namespace = []
 # namespace_pkg = ".".join([namespace[-1], package]) if namespace else package
 
@@ -304,7 +304,7 @@ html_static_path = ['_static']
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'nvector-doc'
+htmlhelp_basename = 'pymef-doc'
 
 
 # -- Options for LaTeX output
@@ -323,7 +323,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual])
 latex_documents = [
-  ('index', 'user_guide.tex', u'nvector Documentation',
+  ('index', 'user_guide.tex', u'pymef Documentation',
    u'Per A Brodtkorb', 'manual'),
 ]
 
