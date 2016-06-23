@@ -2,42 +2,42 @@
 """ generated source for module PMatrix """
 from __future__ import print_function
 # package: jMEF
-# 
+#
 #  * @author  Vincent Garcia
 #  * @author  Frank Nielsen
 #  * @version 1.0
 #  *
 #  * @section License
-#  * 
+#  *
 #  * See file LICENSE.txt
 #  *
 #  * @section Description
-#  * 
+#  *
 #  * A statistical distribution is parameterized by a set of values (parameters).
 #  * The PMatrix class implements a parameter object.
 #  * Parameters are represented as a matrix.
-#  
+#
 class PMatrix(Parameter):
     """ generated source for class PMatrix """
-    # 
+    #
     # 	 * Constant for serialization.
-    # 	 
+    #
     serialVersionUID = 1
 
-    # 
+    #
     # 	 * Dimension of the matrix.
-    # 	 
+    #
     dim = int()
 
-    # 
+    #
     # 	 * Array containing the values of the matrix.
-    # 	 
+    #
     array = []
 
-    # 
+    #
     # 	 * Class constructor.
     # 	 * @param dim dimension of the matrix
-    # 	 
+    #
     @overloaded
     def __init__(self, dim):
         """ generated source for method __init__ """
@@ -45,10 +45,10 @@ class PMatrix(Parameter):
         self.dim = dim
         self.array = [None] * dim
 
-    # 
+    #
     # 	 * Class constructor by copy.
     # 	 * @param M matrix to copy
-    # 	 
+    #
     @__init__.register(object, PMatrix)
     def __init___0(self, M):
         """ generated source for method __init___0 """
@@ -60,11 +60,11 @@ class PMatrix(Parameter):
             pass
             i += 1
 
-    # 
+    #
     # 	 * Adds (not in place) the current matrix \f$ m_1 \f$ to the matrix \f$ m_2 \f$.
     # 	 * @param   m2  matrix \f$ m_2 \f$
     # 	 * @return      \f$ m_1 + m_2 \f$
-    # 	 
+    #
     def Plus(self, m2):
         """ generated source for method Plus """
         Q = m2
@@ -75,11 +75,11 @@ class PMatrix(Parameter):
             i += 1
         return result
 
-    # 
+    #
     # 	 * Subtracts (not in place) the matrix \f$ m_2 \f$ to the current matrix \f$ v_1 \f$.
     # 	 * @param   m2  vector \f$ m_2 \f$
     # 	 * @return      \f$ m_1 - m_2 \f$
-    # 	 
+    #
     def Minus(self, m2):
         """ generated source for method Minus """
         Q = m2
@@ -90,11 +90,11 @@ class PMatrix(Parameter):
             i += 1
         return result
 
-    # 
+    #
     # 	 * Multiplies (not in place) the current matrix \f$ m \f$ by a real number \f$ \lambda \f$.
     # 	 * @param  lambda  value \f$ \lambda \f$
     # 	 * @return         \f$ \lambda m\f$
-    # 	 
+    #
     def Times(self, lambda_):
         """ generated source for method Times """
         result = PMatrix(self.dim)
@@ -104,21 +104,21 @@ class PMatrix(Parameter):
             i += 1
         return result
 
-    # 
+    #
     # 	 * Computes the inner product (real number) between the current matrix \f$ m_1 \f$ and the matrix \f$ m_2 \f$.
     # 	 * @param   m2  vector \f$ m_2 \f$
-    # 	 * @return      \f$ tr(m_1 . m_2^\top) \f$ 
-    # 	 
+    # 	 * @return      \f$ tr(m_1 . m_2^\top) \f$
+    #
     def InnerProduct(self, m2):
         """ generated source for method InnerProduct """
         Q = m2
         return (self.Multiply(Q.Transpose())).Trace()
 
-    # 
+    #
     # 	 * Multiplies (not in place) the current matrix \f$ v_1 \f$ by the matrix \f$ m_2 \f$.
     # 	 * @param  m2  matrix \f$ m_2 \f$
     # 	 * @return     \f$ m_1 m_2\f$
-    # 	 
+    #
     def Multiply(self, m2):
         """ generated source for method Multiply """
         result = PMatrix(self.dim)
@@ -129,11 +129,11 @@ class PMatrix(Parameter):
             i += 1
         return result
 
-    # 
+    #
     # 	 * Multiplies (not in place) the current matrix \f$ m \f$ by a vector \f$ v \f$.
     # 	 * @param   v   vector \f$ v \f$
     # 	 * @return      \f$ m . v\f$
-    # 	 
+    #
     def MultiplyVectorRight(self, v):
         """ generated source for method MultiplyVectorRight """
         result = PVector(v.dim)
@@ -149,21 +149,21 @@ class PMatrix(Parameter):
             i += 1
         return result
 
-    # 
+    #
     # 	 * Computes the inverse of the current matrix \f$ m \f$ using Gauss-Jordan elimination.
     # 	 * @return \f$ m^{-1} \f$
-    # 	 
+    #
     def Inverse(self):
         """ generated source for method Inverse """
         result = PMatrix(self)
         GaussJordan(result.array, self.dim)
         return result
 
-    # 
+    #
     # 	 * Gauss-Jordan elimination.
     # 	 * @param a    matrix to inverse
     # 	 * @param dim  dimension of the matrix
-    # 	 
+    #
     @classmethod
     def GaussJordan(cls, a, dim):
         """ generated source for method GaussJordan """
