@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 __all__ = ['Divergence', 'BregmanDivergence', 'KullbackLeibler', 'BurbeaRao',
            'Bhattacharyya']
@@ -15,20 +15,20 @@ class BregmanDivergence(Divergence):
         self._inner = ef.inner
 
     def right_centroid(self, data, weights):
-        c = numpy.empty((), dtype=self._ef._natural_dtype)
+        c = np.empty((), dtype=self._ef._natural_dtype)
         for labelN in self._ef._natural_dtype.names:
-            c[labelN] = numpy.average(data[labelN], axis=0, weights=weights)
+            c[labelN] = np.average(data[labelN], axis=0, weights=weights)
         return c
 
     def left_centroid(self, data, weights):
-        c = numpy.empty((), dtype=self._ef._expectation_dtype)
+        c = np.empty((), dtype=self._ef._expectation_dtype)
         n = data.shape[0]
-        new_data = numpy.empty(n, dtype=self._ef._expectation_dtype)
+        new_data = np.empty(n, dtype=self._ef._expectation_dtype)
         for i in xrange(n):
             new_data[i] = self._ef.gradF(data[i])
 
         for label in self._ef._expectation_dtype.names:
-            c[label] = numpy.average(new_data[label], axis=0, weights=weights)
+            c[label] = np.average(new_data[label], axis=0, weights=weights)
         return self._ef.gradG(c)
 
     def __call__(self, p, q):
@@ -41,7 +41,7 @@ class BregmanDivergence(Divergence):
         # else:
         #     shape = p.shape
 
-        diff = numpy.empty((), dtype=p.dtype)
+        diff = np.empty((), dtype=p.dtype)
         for labelN in self._ef._natural_dtype.names:
             diff[labelN] = p[labelN] - q[labelN]
 
@@ -67,7 +67,7 @@ class BurbeaRao(Divergence):
         F = self._ef.F
 
         # s = 0.5 * ( p + q)
-        s = numpy.empty(1, dtype=self._ef._natural_dtype)
+        s = np.empty(1, dtype=self._ef._natural_dtype)
         for label in self._ef._natural_dtype.names:
             s[label] = 0.5 * (p[label] + q[label])
 
@@ -81,24 +81,24 @@ class BurbeaRao(Divergence):
         count = 0
 
         # left KL centroid
-        data1 = numpy.empty(n, dtype=self._ef._expectation_dtype)
+        data1 = np.empty(n, dtype=self._ef._expectation_dtype)
         for i in xrange(n):
             data1[i] = gradF(data[i])
 
-        c = numpy.empty(1, dtype=self._ef._expectation_dtype)
+        c = np.empty(1, dtype=self._ef._expectation_dtype)
         for label in self._ef._expectation_dtype.names:
-            c[label] = numpy.average(data1[label], axis=0, weights=weights)
+            c[label] = np.average(data1[label], axis=0, weights=weights)
         c = gradG(c)
 
         # c0 = c
         # while self(c0, c) > e and count < 10 or count == 0:
         while count < 10:
             # s = w_i * gradF(tmp).sum(axis = 1)
-            s = numpy.zeros(1, dtype=self._ef._expectation_dtype)
+            s = np.zeros(1, dtype=self._ef._expectation_dtype)
             for i in xrange(n):
                 # tmp = 0.5 * (data[i] + c)
                 x = data[i]
-                tmp = numpy.empty(1, dtype=self._ef._natural_dtype)
+                tmp = np.empty(1, dtype=self._ef._natural_dtype)
                 for label in self._ef._natural_dtype.names:
                     tmp[label] = 0.5 * (x[label] + c[label])
 
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     br = BurbeaRao(UnivariateGaussian())
 
     c = UnivariateGaussian()
-    c.natural(br.centroid(mm.natural(), numpy.array([0.25, 0.25, 0.25, 0.25])))
+    c.natural(br.centroid(mm.natural(), np.array([0.25, 0.25, 0.25, 0.25])))
 
     print c.source()
     print br(c.natural(), mm[0].natural())

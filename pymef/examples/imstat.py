@@ -5,9 +5,9 @@ from pylab import imread
 import sys
 from matplotlib import pyplot
 
-from pyMEF.Build import BregmanSoftClustering, KDE
-from pyMEF.Simplify import BregmanHardClustering
-from pyMEF.Families import *
+from pymef.build import BregmanSoftClustering, KDE
+from pymef.simplify import BregmanHardClustering
+from pymef.families import *
 
 if len(sys.argv) < 4:
     print "usage: %s method k image [output]" % sys.argv[0]
@@ -74,7 +74,7 @@ while counts.min() < needed:# and i < 100:
     print numpy.count_nonzero(counts)
     i += 1
     points = mm.rand(count)
-    
+
     for RGBxy in points:
         x = int(RGBxy[3])
         y = int(RGBxy[4])

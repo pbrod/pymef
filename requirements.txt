@@ -1,3 +1,5 @@
 # Add your requirements here like:
 numpy
+munkres
+pyemd
 scipy>=0.9
