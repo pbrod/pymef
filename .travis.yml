@@ -1,36 +1,37 @@
 # Travis configuration file using the build matrix feature
 # Read more under http://docs.travis-ci.com/user/build-configuration/
+# and https://conda.io/docs/user-guide/tasks/use-conda-with-travis-ci.html
 # THIS SCRIPT IS SUPPOSED TO BE AN EXAMPLE. MODIFY IT ACCORDING TO YOUR NEEDS!
+dist: xenial
 sudo: false
 language: python
-python:
-  - 2.7
-  - 3.3
-  - 3.4
+# We don't actually use the Travis Python, but this keeps it organized.
   - 3.5
+  - 3.6
+  - 3.7
+  - 3.8
+
+services:
+    - xvfb
+
 notifications:
   email: false
  
 # Setup anaconda
 before_install:
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
-  - chmod +x miniconda.sh
-  - ./miniconda.sh -b
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      export PATH=/home/travis/miniconda2/bin:$PATH;
-    else
-      export PATH=/home/travis/miniconda3/bin:$PATH;
-    fi
-  - conda update --yes conda
-  - conda install --yes conda-build
-  - conda create --yes -n condaenv python=$TRAVIS_PYTHON_VERSION
-  - conda install --yes -n condaenv pip
-  - conda config --add channels https://conda.anaconda.org/omnia
-  - conda config --add channels https://conda.anaconda.org/pbrod
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+  - conda install conda-build
+  - conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION
+  - conda install -n condaenv pip
+  - conda config --add channels conda-forge
+  - conda config --add channels https://conda.anaconda.org/qttesting
   - source activate condaenv
 # Install packages
 install:
@@ -44,7 +45,14 @@ before_script:
   - git config --global user.email "per.andreas.brodtkorb@gmail.com"
   - git config --global user.name "pbrod"
 script:
-  - coverage run --source=nvector setup.py test
+  - pwd
+  - ls
+  - coverage erase
+  - coverage run --source=pymef -m py.test build/lib
+# see http://www.camillescott.org/2016/07/15/travis-pytest-scipyconf/
+#  - sed -i 's/filename="/filename=".\//g' ./coverage-reports/coverage.xml
+#  - pylint numdifftools -r n --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" > pylint-report.txt
+# see https://community.sonarsource.com/t/sonarqube-reports-zero-coverage-from-coverage-xml-generated-by-coverage-py-in-  azure-devops/28817/7
 
 after_success:
   - coveralls
