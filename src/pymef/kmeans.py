@@ -99,7 +99,7 @@ class kMeans(object):
             while p < self._k and i < self._size:
                 c = self._data[perm[i]]
                 ok = True
-                for j in xrange(p):
+                for j in range(p):
                     if (self._sites[j] == c).all():
                         ok = False
                 if ok:
@@ -124,13 +124,13 @@ class kMeans(object):
                 for i in range(n):
                     'Dsum = sum_{x in X} min(D(x)^2,||x-xi||^2)'
                     Dsum = reduce(lambda x, y: x + y,
-                                  (min(D[j], div(X[j], X[i])) for j in xrange(n)))
+                                  (min(D[j], div(X[j], X[i])) for j in range(n)))
 
                     if bestDsum < 0 or Dsum < bestDsum:
                         bestDsum, bestIdx = Dsum, i
 
                 centers.append(X[bestIdx])
-                D = [min(D[i], div(X[i], X[bestIdx])) for i in xrange(n)]
+                D = [min(D[i], div(X[i], X[bestIdx])) for i in range(n)]
 
             self._sites = numpy.array(centers)
 
@@ -150,7 +150,7 @@ class kMeans(object):
         self._old_repartition = self._repartition.copy()
         div = self._div
 
-        for i in xrange(self._size):
+        for i in range(self._size):
             p = self._data[i]
             best_dist = float('inf')
             best_index = -1
@@ -159,7 +159,7 @@ class kMeans(object):
             # best_index = numpy.argsort(dists)[0]
             # best_dist = dists[best_index]
             # print dists, best_dist, best_index
-            for j in xrange(self._k):
+            for j in range(self._k):
                 c = self._sites[j]
                 d = div(c, p)
                 if d < best_dist:
@@ -169,7 +169,7 @@ class kMeans(object):
 
     def updateCentroids(self):
         centroid = self._centroid
-        for i in xrange(self._k):
+        for i in range(self._k):
             cell = numpy.compress(
                 numpy.equal(
                     self._repartition,
@@ -188,7 +188,7 @@ class kMeans(object):
 
     def updateError(self):
         error = 0
-        for i in xrange(self._size):
+        for i in range(self._size):
             error += self._data_weights[i] * self._div(
                 self._data[i],
                 self._sites[
@@ -198,6 +198,7 @@ class kMeans(object):
     def error(self):
         return self._error
 
+
 if __name__ == "__main__":
     data = numpy.array(
         [[0.0, 0.0], [1.0, 1.0], [0.9, 0.9], [1.0, 0.0], [0.9, 0.1]])
@@ -205,8 +206,8 @@ if __name__ == "__main__":
 
     kmeans.initialize()
     for e in kmeans:
-        print e
-    print kmeans.repartition()
+        print(e)
+    print(kmeans.repartition())
 
     kmeans.run()
-    print kmeans.repartition()
+    print(kmeans.repartition())

@@ -3,7 +3,7 @@ from numpy import dot, log, pi, sqrt, exp, outer
 from numpy.linalg import inv, det
 from math import factorial
 from scipy.special import gamma
-from ..metropolis import Metropolis
+from pymef.metropolis import Metropolis
 
 __all__ = ['Distribution', 'ExponentialFamily', 'MultivariateGaussian',
            'UnivariateGaussian', 'UnivariateGeneralizedGaussian']
@@ -193,13 +193,13 @@ class MultivariateGaussian(ExponentialFamily):
     def theta2lambda(self, t):
         assert(t.dtype == self._natural_dtype)
 
-        l = np.empty(1, dtype=self._source_dtype)
+        lam = np.empty(1, dtype=self._source_dtype)
 
         inv_Theta = inv(t['Theta'])
-        l['mu'][0] = 0.5 * dot(inv_Theta, t['theta'])
-        l['Sigma'][0] = 0.5 * inv_Theta
+        lam['mu'][0] = 0.5 * dot(inv_Theta, t['theta'])
+        lam['Sigma'][0] = 0.5 * inv_Theta
 
-        return l[0]
+        return lam[0]
 
     def eta2lambda(self, e):
         """
@@ -207,12 +207,12 @@ class MultivariateGaussian(ExponentialFamily):
         """
         assert(e.dtype == self._expectation_dtype)
 
-        l = np.empty(1, dtype=self._source_dtype)
+        lam = np.empty(1, dtype=self._source_dtype)
 
-        l['mu'][0] = e['eta']
-        l['Sigma'][0] = - (e['Eta'] + outer(e['eta'], e['eta']))
+        lam['mu'][0] = e['eta']
+        lam['Sigma'][0] = - (e['Eta'] + outer(e['eta'], e['eta']))
 
-        return l[0]
+        return lam[0]
 
     def lambda2eta(self, l):
         """
@@ -243,7 +243,7 @@ class MultivariateGaussian(ExponentialFamily):
         eta = e['eta'].reshape(n, self.dim)
         eta[:] = x
 
-        for i in xrange(n):
+        for i in range(n):
             e['Eta'][i] = - outer(x[i], x[i])
 
         return e
@@ -329,32 +329,32 @@ class MultivariateGaussian(ExponentialFamily):
 def demo_multivariate():
     p = ([3.0, 12.0], [[5.0, 1.0], [1.0, 3.0]])
     gaussian = MultivariateGaussian(2)
-    print gaussian
+    print(gaussian)
 
-    print "\n* source", gaussian.source(p)
+    print("\n* source", gaussian.source(p))
     gaussian._expectation = None
     gaussian._natural = None
-    print "lambda2theta", gaussian.natural()
+    print("lambda2theta", gaussian.natural())
     gaussian._expectation = None
     gaussian._source = None
-    print "theta2lambda", gaussian.source()
+    print("theta2lambda", gaussian.source())
 
-    print "\n* source", gaussian.source(p)
+    print("\n* source", gaussian.source(p))
     gaussian._expectation = None
     gaussian._natural = None
-    print "lambda2eta", gaussian.expectation()
+    print("lambda2eta", gaussian.expectation())
     gaussian._natural = None
     gaussian._source = None
-    print "eta2lambda", gaussian.source()
+    print("eta2lambda", gaussian.source())
 
     gaussian.source(p)
-    print "\n* natural", gaussian.natural()
+    print("\n* natural", gaussian.natural())
     gaussian._source = None
     gaussian._expectation = None
-    print "theta2eta", gaussian.expectation()
+    print("theta2eta", gaussian.expectation())
     gaussian._source = None
     gaussian._natural = None
-    print "eta2theta", gaussian.natural()
+    print("eta2theta", gaussian.natural())
 
     gaussian.source(p)
     from pylab import scatter, show
@@ -418,22 +418,22 @@ class UnivariateGaussian(ExponentialFamily):
     def theta2lambda(self, t):
         assert(t.dtype is self._natural_dtype)
 
-        l = np.empty(1, dtype=self._source_dtype)
+        lam = np.empty(1, dtype=self._source_dtype)
 
-        l['mu'] = - 0.5 * t['theta1'] / t['theta2']
-        l["sigma^2"] = - 0.5 / t['theta2']
+        lam['mu'] = - 0.5 * t['theta1'] / t['theta2']
+        lam["sigma^2"] = - 0.5 / t['theta2']
 
-        return l
+        return lam
 
     def eta2lambda(self, e):
         assert(e.dtype is self._expectation_dtype)
 
-        l = np.empty(1, dtype=self._source_dtype)
+        lam = np.empty(1, dtype=self._source_dtype)
 
-        l['mu'] = e['eta1']
-        l["sigma^2"] = e['eta2'] - e['eta1']**2
+        lam['mu'] = e['eta1']
+        lam["sigma^2"] = e['eta2'] - e['eta1']**2
 
-        return l
+        return lam
 
     def lambda2eta(self, l):
         assert(l.dtype is self._source_dtype)
@@ -501,32 +501,32 @@ class UnivariateGaussian(ExponentialFamily):
 def demo_univariate_gaussian():
     p = [(3.0, 5.0)]
     gaussian = UnivariateGaussian()
-    print gaussian
+    print(gaussian)
 
-    print "\n* source", gaussian.source(p)
+    print("\n* source", gaussian.source(p))
     gaussian._expectation = None
     gaussian._natural = None
-    print "lambda2theta", gaussian.natural()
+    print("lambda2theta", gaussian.natural())
     gaussian._expectation = None
     gaussian._source = None
-    print "theta2lambda", gaussian.source()
+    print("theta2lambda", gaussian.source())
 
-    print "\n* source", gaussian.source(p)
+    print("\n* source", gaussian.source(p))
     gaussian._expectation = None
     gaussian._natural = None
-    print "lambda2eta", gaussian.expectation()
+    print("lambda2eta", gaussian.expectation())
     gaussian._natural = None
     gaussian._source = None
-    print "eta2lambda", gaussian.source()
+    print("eta2lambda", gaussian.source())
 
     gaussian.source(p)
-    print "\n* natural", gaussian.natural()
+    print("\n* natural", gaussian.natural())
     gaussian._source = None
     gaussian._expectation = None
-    print "theta2eta", gaussian.expectation()
+    print("theta2eta", gaussian.expectation())
     gaussian._source = None
     gaussian._natural = None
-    print "eta2theta", gaussian.natural()
+    print("eta2theta", gaussian.natural())
 
     gaussian.source(p)
     from pylab import hist, show
@@ -581,11 +581,11 @@ class UnivariateGeneralizedGaussian(ExponentialFamily):
     def theta2lambda(self, t):
         assert(t.dtype is self._natural_dtype)
 
-        l = np.empty(1, dtype=self._source_dtype)
+        lam = np.empty(1, dtype=self._source_dtype)
 
-        l['alpha'] = 1.0 / t['theta1']
+        lam['alpha'] = 1.0 / t['theta1']
 
-        return l
+        return lam
 
     def t(self, x):
         n = x.shape[0]
@@ -643,15 +643,15 @@ class UnivariateGeneralizedGaussian(ExponentialFamily):
 def demo_univariate_generalized_gaussian():
     p = (3.0,)
     gg = UnivariateGeneralizedGaussian(0.1)
-    print gg
+    print(gg)
 
-    print "\n* source", gg.source(p)
+    print("\n* source", gg.source(p))
     gg._expectation = None
     gg._natural = None
-    print "lambda2theta", gg.natural()
+    print("lambda2theta", gg.natural())
     gg._expectation = None
     gg._source = None
-    print "theta2lambda", gg.source()
+    print("theta2lambda", gg.source())
 
     # print "\n* source", gg.source(p)
     # gg._expectation = None

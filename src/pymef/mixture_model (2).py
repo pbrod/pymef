@@ -21,7 +21,7 @@ of exponential families.
 from bisect import bisect
 import numpy
 
-from .families import Distribution
+from pymef.families import Distribution
 
 
 class MixtureModel(Distribution):
@@ -270,7 +270,7 @@ def demo_mixture_models():
         mm.weights[3] = 0.05
 
         for (w, ef) in mm:
-            print w, ef.source()
+            print(w, ef.source())
 
         mm.savetxt(sys.stdout)
 
