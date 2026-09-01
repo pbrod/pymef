@@ -33,7 +33,7 @@ class Metropolis(object):
 
 
 def demo_metropolis_gaussian():
-    from .families import UnivariateGaussian
+    from pymef.families import UnivariateGaussian
 
     gaussian = UnivariateGaussian()
     gaussian.source((3.0, 5.0))
@@ -41,7 +41,7 @@ def demo_metropolis_gaussian():
     metropolis = Metropolis(gaussian)
     data = metropolis(10000)
 
-    print np.mean(data), np.var(data)
+    print(np.mean(data), np.var(data))
 
     from pylab import hist, show
     hist(data, 100)
@@ -49,7 +49,7 @@ def demo_metropolis_gaussian():
 
 
 def demo_metropolis_multivariate():
-    from .families import MultivariateGaussian
+    from pymef.families import MultivariateGaussian
 
     gaussian = MultivariateGaussian(2)
     gaussian.source(([3.0, 12.0], [[5.0, 1.0], [1.0, 3.0]]))
@@ -57,7 +57,7 @@ def demo_metropolis_multivariate():
     metropolis = Metropolis(gaussian)
     data = metropolis(10000)
 
-    print np.mean(data, 0), np.cov(data, rowvar=0)
+    print(np.mean(data, 0), np.cov(data, rowvar=0))
 
     from pylab import scatter, show
     data = gaussian.rand(10000)

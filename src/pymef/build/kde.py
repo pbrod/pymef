@@ -1,8 +1,8 @@
 import numpy
 from scipy.stats import gaussian_kde
 
-from ..families import *
-from ..mixture_model import MixtureModel
+from pymef.families import *
+from pymef.mixture_model import MixtureModel
 
 
 class KDE(MixtureModel, gaussian_kde):

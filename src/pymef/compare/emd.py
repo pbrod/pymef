@@ -2,7 +2,7 @@ import numpy
 import munkres
 # from fastemd import emd_hat
 from pyemd import emd as emd_hat
-from ..divergence import KullbackLeibler as KLEF
+from pymef.divergence import KullbackLeibler as KLEF
 
 
 class Munkres(object):
@@ -17,8 +17,8 @@ class Munkres(object):
 
         m = numpy.empty((n, n))
 
-        for i in xrange(n):
-            for j in xrange(n):
+        for i in range(n):
+            for j in range(n):
                 m[i, j] = gd(p[i], q[j])
 
         transport = munkres.Munkres()
@@ -44,8 +44,8 @@ class FastEMD(object):
 
         m = numpy.empty((n, n))
 
-        for i in xrange(n):
-            for j in xrange(n):
+        for i in range(n):
+            for j in range(n):
                 m[i, j] = gd(p[i], q[j])
 
         cost = emd_hat(p.weights, q.weights, m, self._alpha, gd_metric=False)
@@ -68,8 +68,8 @@ class MajKL:
 
         m = numpy.empty((n, n))
 
-        for i in xrange(n):
-            for j in xrange(n):
+        for i in range(n):
+            for j in range(n):
                 m[i, j] = gd_majkl(p.weights[i], p[i], q.weights[j], q[j])
 
         transport = munkres.Munkres()
@@ -81,10 +81,11 @@ class MajKL:
 
         return cost
 
+
 if __name__ == "__main__":
-    from ..mixture_model import MixtureModel
-    from ..families import UnivariateGaussian
-    from ..divergence import KullbackLeibler
+    from pymef.mixture_model import MixtureModel
+    from pymef.families import UnivariateGaussian
+    from pymef.divergence import KullbackLeibler
 
     d = Munkres(gd=KullbackLeibler())
     # d = FastEMD(gd=KullbackLeibler())
@@ -99,7 +100,7 @@ if __name__ == "__main__":
     mm1[5].source((31, 1))
     mm1[6].source((39, 1))
     mm1[7].source((41, 1))
-    print d(mm1, mm1)
+    print(d(mm1, mm1))
 
     mm2 = MixtureModel(8, UnivariateGaussian, ())
     mm2[0].source((19, 1))
@@ -110,7 +111,7 @@ if __name__ == "__main__":
     mm2[5].source((9, 1))
     mm2[6].source((21, 1))
     mm2[7].source((41, 1))
-    print d(mm1, mm2)
+    print(d(mm1, mm2))
 
     mm3 = MixtureModel(8, UnivariateGaussian, ())
     mm3[0].source((4, 1))
@@ -121,7 +122,7 @@ if __name__ == "__main__":
     mm3[5].source((31, 1))
     mm3[6].source((39, 1))
     mm3[7].source((41, 1))
-    print d(mm1, mm3)
+    print(d(mm1, mm3))
 
     mm4 = MixtureModel(8, UnivariateGaussian, ())
     mm4[0].source((9, 1.2))
@@ -132,7 +133,7 @@ if __name__ == "__main__":
     mm4[5].source((31, 12))
     mm4[6].source((39, 9))
     mm4[7].source((41, 0.5))
-    print d(mm1, mm4)
+    print(d(mm1, mm4))
 
     mm5 = MixtureModel(8, UnivariateGaussian, ())
     mm5[0].source((9.2, 1))
@@ -143,7 +144,7 @@ if __name__ == "__main__":
     mm5[5].source((30.5, 1))
     mm5[6].source((39.1, 1))
     mm5[7].source((40.9, 1))
-    print d(mm1, mm5)
+    print(d(mm1, mm5))
 
     mm6 = MixtureModel(8, UnivariateGaussian, ())
     mm6[0].source((100, 1))
@@ -154,4 +155,4 @@ if __name__ == "__main__":
     mm6[5].source((30, 1))
     mm6[6].source((55, 1))
     mm6[7].source((40, 1))
-    print d(mm1, mm6)
+    print(d(mm1, mm6))

@@ -10,7 +10,7 @@ from pymef.simplify import BregmanHardClustering
 from pymef.families import *
 
 if len(sys.argv) < 4:
-    print "usage: %s method k image [output]" % sys.argv[0]
+    print("usage: %s method k image [output]" % sys.argv[0])
     sys.exit(1)
 
 method = sys.argv[1]
@@ -21,7 +21,7 @@ if len(sys.argv) > 4:
     output = sys.argv[4]
 init = "random"
 
-print "Loading image",
+print("Loading image")
 sys.stdout.flush()
 
 im = imread(im_path)
@@ -33,17 +33,17 @@ height = im.shape[1]
 
 data = numpy.empty((width*height, 5))
 cur = 0
-for i in xrange(width):
-    for j in xrange(height):
+for i in range(width):
+    for j in range(height):
         data[cur, 0] = im[i, j, 0]
         data[cur, 1] = im[i, j, 1]
         data[cur, 2] = im[i, j, 2]
         data[cur, 3] = i
         data[cur, 4] = j
         cur += 1
-print "."
+print(".")
 
-print "Generating mixture",
+print("Generating mixture")
 sys.stdout.flush()
 
 if method == "em":
@@ -55,11 +55,11 @@ elif method == "kde":
         kmeans = BregmanHardClustering(mm, k)
         mm = kmeans.run()
 else:
-    print "Unknown method: choose between em or kde !"
+    print("Unknown method: choose between em or kde !")
     sys.exit(1)
-print "."
+print(".")
 
-print "Creating statistical image",
+print("Creating statistical image")
 sys.stdout.flush()
 
 count = width * height
@@ -70,8 +70,11 @@ counts = numpy.zeros((width, height), dtype=numpy.float)
 
 i = 0
 while counts.min() < needed:# and i < 100:
-    print "At least %i samples by point (need %i, iteration %i, max %i)" % (counts.min(), needed, i, counts.max())
-    print numpy.count_nonzero(counts)
+    print("At least %i samples by point (need %i, iteration %i, max %i)" % (counts.min(),
+                                                                            needed,
+                                                                            i,
+                                                                            counts.max()))
+    print(numpy.count_nonzero(counts))
     i += 1
     points = mm.rand(count)
 
@@ -82,16 +85,21 @@ while counts.min() < needed:# and i < 100:
         if x >= 0 and x < width and y >= 0 and y < height:
             # print "position ok"
             rgb = RGBxy[0:3]
-            if rgb[0] >= 0 and rgb[0] < 256 and rgb[1] >= 0 and rgb[1] < 256 and rgb[2] >= 0 and rgb[2] < 256:
+            if (rgb[0] >= 0
+                and rgb[0] < 256
+                and rgb[1] >= 0
+                and rgb[1] < 256
+                and rgb[2] >= 0
+                    and rgb[2] < 256):
                 # print "color ok"
                 newim[x, y] += rgb
                 counts[x, y] += 1
                 # print newim[x, y], counts[x, y], counts.sum()
 
-print "."
+print(".")
 
-for i in xrange(width):
-    for j in xrange(height):
+for i in range(width):
+    for j in range(height):
         if counts[i, j] > 0:
             newim[i, j] /= 256 * counts[i, j]
 pyplot.imshow(newim)

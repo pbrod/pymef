@@ -1,5 +1,3 @@
-import sys
-
 import numpy as np
 from ..mixture_model import MixtureModel
 from ..kmeans import kMeans
@@ -26,7 +24,7 @@ class BregmanSoftClustering:
 
         self._expectation = np.empty(self._k,
                                      dtype=self._mm._expectation_dtype)
-        for i in xrange(self._k):
+        for i in range(self._k):
             self._mm[i].expectation(self._expectation[i])
 
         self._p = np.empty((self._size, self._k))
@@ -36,7 +34,7 @@ class BregmanSoftClustering:
 
     def initialize(self):
         if self._verbose:
-            print "I",
+            print("I")
         self._count = 0
         self._ll = 0
         self._ll_old = self._threshold
@@ -45,7 +43,7 @@ class BregmanSoftClustering:
         repartition = kmeans().repartition()
 
         # for all clusters
-        for i in xrange(self._k):
+        for i in range(self._k):
             content = np.compress(np.equal(repartition, i), self._data, 0)
             size = content.shape[0]
 
@@ -75,7 +73,7 @@ class BregmanSoftClustering:
         self._threshold = np.abs(0.01 * self._ll)
 
         if self._verbose:
-            print "."
+            print(".")
 
     def run(self):
         self.initialize()
@@ -96,7 +94,7 @@ class BregmanSoftClustering:
 
     def expectation(self):
         if self._verbose:
-            print "E",
+            print("E")
         p = self._p
         mm = self._mm
         w = mm.weights
@@ -105,9 +103,9 @@ class BregmanSoftClustering:
         inner = self._ef.inner
         t = self._ef.t(self._data)
 
-        for i in xrange(self._size):
+        for i in range(self._size):
             s = 0.0
-            for j in xrange(self._k):
+            for j in range(self._k):
                 eta = self._mm[j].expectation()
                 gG = gradG(eta)
 
@@ -119,20 +117,20 @@ class BregmanSoftClustering:
 
                 s += p[i, j]
 
-            for j in xrange(self._k):
+            for j in range(self._k):
                 p[i, j] /= s
 
         if self._verbose:
-            print "."
+            print(".")
 
     def maximisation(self):
         if self._verbose:
-            print "M",
+            print("M")
         p = self._p
         w = self._mm.weights
         t = self._ef.t(self._data)
 
-        for j in xrange(self._k):
+        for j in range(self._k):
             s = p[:, j].sum()
             w[j] = s / self._size
             spt = np.zeros(1, dtype=self._mm._expectation_dtype)
@@ -142,22 +140,23 @@ class BregmanSoftClustering:
                 eta[labelE] = spt[labelE] / s
 
         if self._verbose:
-            print "."
+            print(".")
 
     def logLikelihood(self):
         if self._verbose:
-            print "L",
+            print("L")
         mm = self._mm
         self._ll_old = self._ll
         self._ll = mm.logLikelihood(self._data)
 
         assert not(np.isnan(self._ll))
         if self._verbose:
-            print self._ll
+            print(self._ll)
         return self._ll
 
     def mixture(self):
         return self._mm
+
 
 if __name__ == "__main__":
     from ..families import UnivariateGaussian
@@ -167,7 +166,7 @@ if __name__ == "__main__":
     k = 8
     im = imread("examples/data/ar.ppm")
     data = (im.sum(axis=2)/3.0).flatten().reshape((-1, 1))
-    print data.shape
+    print(data.shape)
     em = BregmanSoftClustering(data, k, UnivariateGaussian, ())
     mm = em.run()
     mm.savetxt(sys.stdout)

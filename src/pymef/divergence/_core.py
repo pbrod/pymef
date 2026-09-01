@@ -24,7 +24,7 @@ class BregmanDivergence(Divergence):
         c = np.empty((), dtype=self._ef._expectation_dtype)
         n = data.shape[0]
         new_data = np.empty(n, dtype=self._ef._expectation_dtype)
-        for i in xrange(n):
+        for i in range(n):
             new_data[i] = self._ef.gradF(data[i])
 
         for label in self._ef._expectation_dtype.names:
@@ -82,7 +82,7 @@ class BurbeaRao(Divergence):
 
         # left KL centroid
         data1 = np.empty(n, dtype=self._ef._expectation_dtype)
-        for i in xrange(n):
+        for i in range(n):
             data1[i] = gradF(data[i])
 
         c = np.empty(1, dtype=self._ef._expectation_dtype)
@@ -95,7 +95,7 @@ class BurbeaRao(Divergence):
         while count < 10:
             # s = w_i * gradF(tmp).sum(axis = 1)
             s = np.zeros(1, dtype=self._ef._expectation_dtype)
-            for i in xrange(n):
+            for i in range(n):
                 # tmp = 0.5 * (data[i] + c)
                 x = data[i]
                 tmp = np.empty(1, dtype=self._ef._natural_dtype)
@@ -121,8 +121,8 @@ class Bhattacharyya(Divergence):
 
 
 if __name__ == "__main__":
-    from ..families import UnivariateGaussian
-    from ..mixture_model import MixtureModel
+    from pymef.families import UnivariateGaussian
+    from pymef.mixture_model import MixtureModel
 
     mm = MixtureModel(4, UnivariateGaussian, ())
     mm[0].source((9, 1))
@@ -135,16 +135,16 @@ if __name__ == "__main__":
     c = UnivariateGaussian()
     c.natural(br.centroid(mm.natural(), np.array([0.25, 0.25, 0.25, 0.25])))
 
-    print c.source()
-    print br(c.natural(), mm[0].natural())
-    print br(c.natural(), mm[1].natural())
+    print(c.source())
+    print(br(c.natural(), mm[0].natural()))
+    print(br(c.natural(), mm[1].natural()))
 
     g = UnivariateGaussian()
     g.source((10, 3))
-    print br(g.natural(), mm[0].natural())
-    print br(g.natural(), mm[1].natural())
+    print(br(g.natural(), mm[0].natural()))
+    print(br(g.natural(), mm[1].natural()))
 
     g = UnivariateGaussian()
     g.source((10, 1))
-    print br(g.natural(), mm[0].natural())
-    print br(g.natural(), mm[1].natural())
+    print(br(g.natural(), mm[0].natural()))
+    print(br(g.natural(), mm[1].natural()))
